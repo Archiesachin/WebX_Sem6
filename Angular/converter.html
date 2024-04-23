@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="converterApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS Converters</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+</head>
+<body ng-controller="ConverterController">
+
+    <h1>Currency Converter</h1>
+    <input type="number" ng-model="currencyAmount" placeholder="Enter amount">
+    <select ng-model="selectedCurrencyFrom" ng-options="currency for currency in currencies">
+    </select>
+    <span>to</span>
+    <select ng-model="selectedCurrencyTo" ng-options="currency for currency in currencies">
+    </select>
+    <p>{{ currencyAmount }} {{ selectedCurrencyFrom }} is {{ convertCurrency() | number:2 }} {{ selectedCurrencyTo }}</p>
+
+    <h1>Temperature Converter</h1>
+    <input type="number" ng-model="temperature" placeholder="Enter temperature">
+    <select ng-model="selectedUnitFrom" ng-options="unit for unit in temperatureUnits">
+    </select>
+    <span>to</span>
+    <select ng-model="selectedUnitTo" ng-options="unit for unit in temperatureUnits">
+    </select>
+    <p>{{ temperature }} {{ selectedUnitFrom }} is {{ convertTemperature() | number:2 }} {{ selectedUnitTo }}</p>
+
+    <h1>Distance Converter</h1>
+    <input type="number" ng-model="distance" placeholder="Enter distance">
+    <select ng-model="selectedUnitFromDistance" ng-options="unit for unit in distanceUnits">
+    </select>
+    <span>to</span>
+    <select ng-model="selectedUnitToDistance" ng-options="unit for unit in distanceUnits">
+    </select>
+    <p>{{ distance }} {{ selectedUnitFromDistance }} is {{ convertDistance() | number:2 }} {{ selectedUnitToDistance }}</p>
+
+    <h1>Weight Converter</h1>
+    <input type="number" ng-model="weight" placeholder="Enter weight">
+    <select ng-model="selectedUnitFromWeight" ng-options="unit for unit in weightUnits">
+    </select>
+    <span>to</span>
+    <select ng-model="selectedUnitToWeight" ng-options="unit for unit in weightUnits">
+    </select>
+    <p>{{ weight }} {{ selectedUnitFromWeight }} is {{ convertWeight() | number:2 }} {{ selectedUnitToWeight }}</p>
+
+    <h1>Speed Converter</h1>
+    <input type="number" ng-model="speed" placeholder="Enter speed">
+    <select ng-model="selectedUnitFromSpeed" ng-options="unit for unit in speedUnits">
+    </select>
+    <span>to</span>
+    <select ng-model="selectedUnitToSpeed" ng-options="unit for unit in speedUnits">
+    </select>
+    <p>{{ speed }} {{ selectedUnitFromSpeed }} is {{ convertSpeed() | number:2 }} {{ selectedUnitToSpeed }}</p>
+
+    <script>
+        var app = angular.module('converterApp', []);
+
+        //Currency Converter
+        app.controller('ConverterController', function ($scope) {
+
+            $scope.currencies = ['USD', 'EUR', 'GBP', 'JPY', 'INR'];
+            $scope.selectedCurrencyFrom = 'USD';
+            $scope.selectedCurrencyTo = 'EUR';
+            $scope.currencyAmount = 1;
+
+            $scope.convertCurrency = function () {
+                var conversionRates = {
+                    'USD': 1,
+                    'EUR': 0.85,
+                    'GBP': 0.73,
+                    'JPY': 110.21,
+                    'INR': 74.94
+                };
+
+                return $scope.currencyAmount * (conversionRates[$scope.selectedCurrencyTo] / conversionRates[$scope.selectedCurrencyFrom]);
+            };
+
+
+            // Temperature Converter
+            $scope.temperatureUnits = ['Celsius', 'Fahrenheit', 'Kelvin'];
+            $scope.selectedUnitFrom = 'Celsius';
+            $scope.selectedUnitTo = 'Fahrenheit';
+            $scope.temperature = 0;
+
+            $scope.convertTemperature = function () {
+                if ($scope.selectedUnitFrom === 'Celsius' && $scope.selectedUnitTo === 'Fahrenheit') {
+                    return ($scope.temperature * 9 / 5) + 32;
+                } else if ($scope.selectedUnitFrom === 'Fahrenheit' && $scope.selectedUnitTo === 'Celsius') {
+                    return ($scope.temperature - 32) * 5 / 9;
+                } else if ($scope.selectedUnitFrom === 'Celsius' && $scope.selectedUnitTo === 'Kelvin') {
+                    return $scope.temperature + 273.15;
+                } else if ($scope.selectedUnitFrom === 'Kelvin' && $scope.selectedUnitTo === 'Celsius') {
+                    return $scope.temperature - 273.15;
+                } else if ($scope.selectedUnitFrom === 'Fahrenheit' && $scope.selectedUnitTo === 'Kelvin') {
+                    return ($scope.temperature + 459.67) * 5 / 9;
+                } else if ($scope.selectedUnitFrom === 'Kelvin' && $scope.selectedUnitTo === 'Fahrenheit') {
+                    return ($scope.temperature * 9 / 5) - 459.67;
+                } else {
+                    return $scope.temperature; 
+                }
+            };
+
+
+            // Distance Converter
+            $scope.distanceUnits = ['Meters', 'Kilometers'];
+            $scope.selectedUnitFromDistance = 'Meters';
+            $scope.selectedUnitToDistance = 'Kilometers';
+            $scope.distance = 0;
+
+            $scope.convertDistance = function () {
+                if ($scope.selectedUnitFromDistance === 'Meters' && $scope.selectedUnitToDistance === 'Kilometers') {
+                    return $scope.distance / 1000;
+                } else if($scope.selectedUnitFromDistance === 'Kilometers' && $scope.selectedUnitToDistance === 'Meters'){
+                  return $scope.distance * 1000;
+                }
+                 else {
+                    return $scope.distance; 
+                }
+            };
+
+            // Weight Converter
+            $scope.weightUnits = ['Grams', 'Kilograms'];
+            $scope.selectedUnitFromWeight = 'Grams';
+            $scope.selectedUnitToWeight = 'Kilograms';
+            $scope.weight = 0;
+
+            $scope.convertWeight = function () {
+                
+                if ($scope.selectedUnitFromWeight === 'Grams' && $scope.selectedUnitToWeight === 'Kilograms') {
+                    return $scope.weight / 1000;
+                }else if($scope.selectedUnitFromWeight === 'Kilograms' && $scope.selectedUnitToWeight === 'Grams'){
+                  return $scope.weight * 1000;
+                }
+                else {
+                    return $scope.weight; 
+                }
+            };
+
+            // Speed Converter
+            $scope.speedUnits = ['Meters/Second', 'Kilometers/Hour'];
+            $scope.selectedUnitFromSpeed = 'Meters/Second';
+            $scope.selectedUnitToSpeed = 'Kilometers/Hour';
+            $scope.speed = 0;
+
+            $scope.convertSpeed = function () {
+                
+                if ($scope.selectedUnitFromSpeed === 'Meters/Second' && $scope.selectedUnitToSpeed === 'Kilometers/Hour') {
+                    return $scope.speed * 3.6;
+                }  else {
+                    return $scope.speed; 
+                }
+            };
+        });
+    </script>
+</body>
+</html>
